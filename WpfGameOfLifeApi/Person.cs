@@ -48,7 +48,7 @@ namespace GameOfLifeApi
         public int Resistence { get; set; }
         public int TotalLife { get; set; }
 
-        public Person Pareja { get; set; }
+        public List<Person> Pareja { get; set; }
         public List<Person> Hijo { get; set; }
 
         /// <summary>
