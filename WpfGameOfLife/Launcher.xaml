@@ -1,0 +1,57 @@
+﻿<Window x:Class="WpfGameOfLife.Launcher"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:clr="clr-namespace:System;assembly=mscorlib"
+        xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+        xmlns:local="clr-namespace:WpfGameOfLife"
+        mc:Ignorable="d"
+        Height="450" Width="800" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="{x:Null}" AllowsTransparency="True" Loaded="Window_Loaded">
+    <Window.Resources>
+
+    </Window.Resources>
+    <Border x:Name="Container" BorderBrush="Black" Background="#FF18181C" CornerRadius="10,10,10,10">
+        <Grid x:Name="wrapperContainer" HorizontalAlignment="Center" VerticalAlignment="Center" Width="780" Height="430">
+            <Grid x:Name="headerContainer" HorizontalAlignment="Center" Height="36" VerticalAlignment="Top" Width="780">
+                <TextBlock x:Name="heaaderText" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="El Juego de la Vida" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Grid x:Name="headerButtons" HorizontalAlignment="Right" Height="46" Margin="0,4,10,0" VerticalAlignment="Center" Width="119">
+                    <Border x:Name="minButton" BorderBrush="#FF212020" BorderThickness="1" Margin="4,10,50,10" Background="#FF424042" CornerRadius="0,0,4,4" HorizontalAlignment="Center" Cursor="Hand">
+                        <Button x:Name="minimizeBtn" Content="____" Height="25" Width="44" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="24" Foreground="#FFFBFBFB" Padding="1,-15,1,1" FontFamily="Segoe UI Black" FontWeight="Bold" Click="minimizeBtn_Click" Cursor="Hand"/>
+                    </Border>
+                    <Border x:Name="closeButton" BorderBrush="#FF212020" BorderThickness="1" Margin="68,10,0,10" Background="#FF424042" CornerRadius="0,0,4,4" HorizontalAlignment="Left">
+                        <Button x:Name="closeBtn" Content="╳" Height="25" Width="44" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="16" Foreground="#FFFBFBFB" Padding="1,-7,1,1" FontFamily="Segoe UI Black" FontWeight="Bold" Click="closeBtn_Click" Cursor="Hand"/>
+                    </Border>
+                </Grid>
+            </Grid>
+            <Grid x:Name="playButtons" HorizontalAlignment="Center" Width="505" VerticalAlignment="Top" Height="108" Margin="0,271,0,0">
+                <Border x:Name="newMatchButton" BorderThickness="1" HorizontalAlignment="Center" Width="229" Height="48" Background="#FF2D2C2D" CornerRadius="6,6,6,6" VerticalAlignment="Top" MouseLeftButtonUp="newMatchButton_MouseLeftButtonUp">
+                    <Button x:Name="newGameBtn" Content="Nueva partida" Height="48" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontSize="18" FontWeight="Bold" Padding="0,0,0,0" Width="229" Cursor="Hand" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Click="newGameBtn_Click"/>
+                </Border>
+                <Border x:Name="joinMatchButton" BorderThickness="1" HorizontalAlignment="Center" Width="229" Height="48" Background="#FF2D2C2D" CornerRadius="6,6,6,6" Margin="0,53,0,0">
+                    <Button x:Name="joinMatchBtn" Content="Unirse a una partida" Height="48" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontSize="18" FontWeight="Bold" Padding="0,0,0,0" Width="229" Cursor="Hand" IsHitTestVisible="False"/>
+                </Border>
+            </Grid>
+            <Grid x:Name="imageContainer" Height="140" Margin="0,54,0,0" Width="522" VerticalAlignment="Top">
+                <Image Source="/logo.png" Margin="0,0,2,-6" Width="522" Height="140" VerticalAlignment="Center">
+                    <Image.OpacityMask>
+                        <ImageBrush ImageSource="/logo.png"/>
+                    </Image.OpacityMask>
+                </Image>
+            </Grid>
+            <Grid x:Name="divUsername" HorizontalAlignment="Center" Margin="0,220,0,0" VerticalAlignment="Top" Width="292">
+                <Border x:Name="userNameBox" BorderThickness="1" Width="292" Height="38" Background="#FF424042" CornerRadius="6,6,6,6" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBox x:Name="userNameField" TextWrapping="Wrap" Text="Ingresa tu nombre" Width="292" Background="{x:Null}" Foreground="#FFC3C3C3" BorderBrush="{x:Null}" SelectionBrush="#FF4E4E4E" VerticalContentAlignment="Center" SelectionTextBrush="#FF101010" FontSize="16" FontWeight="Bold" Padding="5,0,0,0" ScrollViewer.CanContentScroll="True" GotFocus="userNameField_GotFocus"/>
+                </Border>
+            </Grid>
+            <Grid x:Name="bottomContainer" HorizontalAlignment="Center" Height="40" VerticalAlignment="Bottom" Width="320">
+                <emoji:TextBlock x:Name="hubStatusText" TextWrapping="Wrap" FontWeight="SemiBold" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+            </Grid>
+            <Grid x:Name="playWithoutConnectionBox" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,390,10,0" Height="40" Visibility="Hidden">
+                <Button x:Name="playWithoutConnectionBtn" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="playWithoutConnectionBtn_Click">
+                    <emoji:TextBlock x:Name="playWithoutConnectionText" TextWrapping="Wrap" Text="Jugar sin conexión👾" Foreground="White" Cursor="Hand" FontWeight="SemiBold" FontSize="14"/>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
