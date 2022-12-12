@@ -142,19 +142,35 @@ namespace GameOfLifeApi
             Random random = new Random();
             Gender genderBaby;
 
-            int partosPosibles = 1; //Dice que por parto solo puede tenr 1 hijo, pero no dice cuanto partos asi que por ahora solo pondré 1 parto
+            int partosPosibles = 1; //Dice que por parto solo puede tener 1 hijo, pero no dice cuanto partos asi que por ahora solo pondré 1 parto
 
             foreach (Person person in GenerateChilds)
             {
                 // Generar con Faker. //Lo unico que hay que generar con FAKER aqui creo que sería el estado de animo, las deas cosas las heredan del padre o son logica como si esta vivo
                 Person hijo = new Person();
                 genderBaby = (Gender)random.Next(0, 2);
-
+                var _person = new Faker<Person>();
                 if (person.Blood == person.Pareja.Blood)
                 {
                     if (genderBaby == Gender.Male)
                     {
-                        hijo.Gender = genderBaby;
+                        /*_person
+                            .RuleFor(u => u.Gender, f => f.PickRandom<Gender>())
+                            .RuleFor(u => u.Name, (f, u) => f.Name.FirstName(u.Gender == Gender.Male ? Bogus.DataSets.Name.Gender.Male : Bogus.DataSets.Name.Gender.Female))
+                            .RuleFor(u => u.LastName, person.LastName + " " + person.Pareja.LastName)
+                            .RuleFor(p => p.IsMarried, f => false)
+                            .RuleFor(p => p.IsAlive, f => true)
+                            .RuleFor(p => p.Mood, f => f.PickRandom<Mood>())
+                            .RuleFor(p => p.Position, f => new Vector2Pos { X = f.Random.Int(0, 48), Y = f.Random.Int(0, 84) })
+                            .RuleFor(p => p.Age, 0)
+                            .RuleFor(p => p.IsMarried, false)
+                            .RuleFor(p => p.Salary, 0)
+                            .RuleFor(p => p.Avatar, f => f.Internet.Avatar())
+                            .RuleFor(p => p.Blood, person.Blood)
+                            .RuleFor(p => p.IsEmployed, false);
+
+                        var child = _person.Generate(1);*/
+                            hijo.Gender = genderBaby;
                         hijo.Name = person.Name;
                         //hijo.Avatar = ;
                         hijo.Age = 0;
@@ -164,8 +180,6 @@ namespace GameOfLifeApi
                         hijo.IsMarried = false;
                         hijo.IsEmployed = false;
                         hijo.IsAlive = true;
-                        //hijo.Position = ;
-                        //hijo.LastName = person.LastName + " " person.Pareja.
 
                         //Agregarle los hijos
                         person.Hijo.Add(hijo);

@@ -70,16 +70,6 @@ namespace GameOfLifeClient.Hubs
             });
         }
 
-
-        #region Add player data to "context connection"
-
-        public static async void AddPlayer()
-        {
-            //await Invoke("GetContextId");
-        }
-        #endregion
-
-
         public static async void BroadcastPlayerName(string _name)
         {
             await sessionHub.InvokeAsync("BroadcastPlayerName", _name);
