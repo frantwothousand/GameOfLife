@@ -98,6 +98,8 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+
+GameOfLifeClient
 # Chutzpah Test files
 _Chutzpah*
 
