@@ -132,8 +132,8 @@ namespace GameOfLifeApi
 
             foreach (Person husband in ManMarried)
             {
-                if ((husband.Blood == BloodType.Aplus || husband.Blood == BloodType.Bplus || husband.Blood == BloodType.Oplus || husband.Blood == BloodType.ABplus) && (husband.Pareja.Blood == BloodType.Aplus || husband.Pareja.Blood == BloodType.Bplus || husband.Pareja.Blood == BloodType.Oplus || husband.Pareja.Blood == BloodType.ABplus)) GenerateChildren(ListPerson, ManMarried, GenerateChilds);
-                if ((husband.Blood == BloodType.Aminus || husband.Blood == BloodType.Bminus || husband.Blood == BloodType.Ominus || husband.Blood == BloodType.ABminus) && (husband.Pareja.Blood == BloodType.Aminus || husband.Pareja.Blood == BloodType.Bminus || husband.Pareja.Blood == BloodType.Ominus || husband.Pareja.Blood == BloodType.ABminus)) GenerateChildren(ListPerson, ManMarried, GenerateChilds);
+                if ((husband.Blood == BloodType.Aplus || husband.Blood == BloodType.Bplus || husband.Blood == BloodType.Oplus || husband.Blood == BloodType.ABplus) && (husband.Pareja.Blood == BloodType.Aplus || husband.Pareja.Blood == BloodType.Bplus || husband.Pareja.Blood == BloodType.Oplus || husband.Pareja.Blood == BloodType.ABplus)) GenerateChildren(ListPerson, GenerateChilds);
+                if ((husband.Blood == BloodType.Aminus || husband.Blood == BloodType.Bminus || husband.Blood == BloodType.Ominus || husband.Blood == BloodType.ABminus) && (husband.Pareja.Blood == BloodType.Aminus || husband.Pareja.Blood == BloodType.Bminus || husband.Pareja.Blood == BloodType.Ominus || husband.Pareja.Blood == BloodType.ABminus)) GenerateChildren(ListPerson, GenerateChilds);
             }
         }
 
@@ -296,7 +296,11 @@ namespace GameOfLifeApi
 
         }
 
-    }
+        public static void GlobalDestruction(List<Person> ListPerson, int meteorDeath, int earthquakeDeath)
+        {
+            
+        }
+    } 
 }
 
 

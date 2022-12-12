@@ -3,6 +3,7 @@ using GameOfLifeServer.Models;
 using GameOfLifeServer.Services;
 using GameOfLifeServer.Entities;
 using GameOfLifeServer.Helpers;
+using System.Linq;
 
 namespace GameOfLifeServer.Hubs
 {
@@ -16,7 +17,7 @@ namespace GameOfLifeServer.Hubs
         public async Task OnConnectedAsync()
         {
             await PlayerHasJoined();
-            return base.OnConnectedAsync();
+            base.OnConnectedAsync();
         }
 
         public async Task GetContextId()
@@ -37,6 +38,11 @@ namespace GameOfLifeServer.Hubs
         public async Task BroadcastCells(List<Person> _obj)
         {
             await Clients.All.SendAsync("UpdateCells", _obj);
+        }
+
+        public Task Send(string user, string message)
+        {
+            return Clients.AllExcept(Context.ConnectionId).SendAsync("SendMessage", $"[{DateTime.Now}] {user}: {message}");
         }
     }
 }

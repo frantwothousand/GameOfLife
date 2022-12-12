@@ -1,5 +1,6 @@
 ﻿using GameOfLifeApi;
 using GameOfLifeApi.Enums;
+using GameOfLifeClient.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -66,7 +67,7 @@ public class Board
                         Stroke = Brushes.Black,
                         StrokeThickness = 0.5,
                     };
-                    // TODO: Add event above.
+                    
                     position[i, j] = r;
                     Canvas.SetLeft(r, j * CellSize); // Columna
                     Canvas.SetTop(r, i * CellSize);
@@ -110,39 +111,25 @@ public class Board
         }
     }
 
-    public static void LoadDataFromPlayer(Canvas canva, List<Person> _obj)
+    public static void LoadDataFromPlayer(List<Person> _obj)
     {
-        for (int i = 0; i < BoardSizeX; i++)
+        foreach (var item in _obj)
         {
-            for (int j = 0; j < BoardSizeY; j++)
-            {
-                if (!(i == 0 || i == BoardSizeX - 1 || j == 0 || j == BoardSizeY - 1))
-                {
-                    foreach (var item in _obj)
-                    {
-                        if (item.Position.X.Equals(i) && item.Position.Y.Equals(j))
-                        {
-                            Rectangle r = new Rectangle
-                            {
-                                Width = CellSize,
-                                Height = CellSize,
-                                Stroke = Brushes.Black,
-                                StrokeThickness = 0.5,
-                                Fill = Brushes.GreenYellow,
-                            };
-                            r.MouseDown += R_MouseDown;
-                            position[i, j] = r;
-
-                            Canvas.SetLeft(r, j * CellSize); // Columna
-                            Canvas.SetTop(r, i * CellSize); // Fila
-                            canva.Children.Add(r);
-
-                            FakeData.persons.Add(item);
-                        }
-                    }
-                }
-            }
+            FakeData.persons.Add(item);
         }
+        UpdateCells(_obj);
+    }
+
+    public static void UpdateCells(List<Person> _list)
+    {
+        int count = new int();
+        foreach(var item in _list)
+        {
+            count++;
+            FakeData.persons.Add(item);
+        }
+
+        Log.Add(Brushes.Beige, $"Total de personas: {count}", Launcher.game.messageList);
     }
     
     private static void R_MouseDown(object sender, MouseButtonEventArgs e)

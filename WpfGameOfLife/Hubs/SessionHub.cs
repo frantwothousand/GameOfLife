@@ -26,7 +26,7 @@ namespace GameOfLifeClient.Hubs
         /// </summary>
         public static HubConnection sessionHub { get; } = new HubConnectionBuilder()
              .AddJsonProtocol(options => options.PayloadSerializerOptions.PropertyNamingPolicy = null)
-             .WithUrl("http://localhost:5000/gameoflife")
+             .WithUrl("http://10.0.216.121:5000/gameoflife")
              .Build();
         public static HubConnectionState hubConnectionState { get; set; } = HubConnectionState.Disconnected;
 
@@ -64,9 +64,13 @@ namespace GameOfLifeClient.Hubs
                 Log.Add(Brushes.GreenYellow, $"El jugador {playername} se ha unido.", Launcher.game.messageList);
             });
 
-            sessionHub.On("UpdateCells", (string player, List<Person> data) =>
+            sessionHub.On("UpdateCells", (List<Person> data) =>
             {
-                Board.LoadFromCollection(Launcher.game.gameBoard, data);
+                Board.LoadDataFromPlayer(data);
+            });
+
+            sessionHub.On("SendMessage", (string _content) => {
+                Log.Add(Brushes.White, _content, Launcher.game.messageList);
             });
         }
 
@@ -77,7 +81,12 @@ namespace GameOfLifeClient.Hubs
 
         public static async void BroadcastCells(List<Person> _obj)
         {
-            await Invoke("BroadcastCells", _obj);
+            await sessionHub.InvokeAsync("BroadcastCells", _obj);
+        }
+
+        public static async void Send(string user, string message)
+        {
+            await sessionHub.InvokeAsync("Send", user, message);
         }
     }
 } 

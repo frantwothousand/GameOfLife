@@ -70,7 +70,8 @@ namespace WpfGameOfLife
             Board brd = new Board();
             brd.CreateBoard(gameBoard);
             Log.Add(Brushes.GreenYellow, "Te has unido a la partida.", messageList);
-            _.BroadcastPlayerName(Launcher.userNameText);
+            if(Launcher.isConnected)
+                _.BroadcastPlayerName(Launcher.userNameText);
             
         }
 
@@ -193,8 +194,9 @@ namespace WpfGameOfLife
             
             try
             {
-                await _.Invoke("Send", messageField.Text);
+                _.Send(Launcher.userNameText, messageField.Text);
                 Log.Add(Brushes.Green, $"You: {messageField.Text}", messageList);
+                messageField.Text = "";
                 //chatBox.Text = "";
             }
             catch (Exception err)
