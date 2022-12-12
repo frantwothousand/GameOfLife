@@ -1,4 +1,5 @@
 using Bogus;
+using GameOfLifeApi;
 using GameOfLifeApi.Enums;
 using GameOfLifeApi.Utilities;
 using Newtonsoft.Json;
@@ -93,7 +94,7 @@ namespace GameOfLifeApi
                                 woman.IsMarried = true;
                                 man.IsMarried = true;
 
-                                // Seg˙n la data analizada en base a la lÛgica, los que se casen, deben ser actualizados en la lista principal.
+                                // Seg√∫n la data analizada en base a la l√≥gica, los que se casen, deben ser actualizados en la lista principal.
                                 
                                 ListPerson.Find(x => x.Name == man.Name)!.ChangeCivilState(true);
                                 ListPerson.Find(x => x.Name == woman.Name)!.ChangeCivilState(true);
@@ -142,11 +143,11 @@ namespace GameOfLifeApi
             Random random = new Random();
             Gender genderBaby;
 
-            int partosPosibles = 1; //Dice que por parto solo puede tener 1 hijo, pero no dice cuanto partos asi que por ahora solo pondrÈ 1 parto
+            int partosPosibles = 1; //Dice que por parto solo puede tener 1 hijo, pero no dice cuanto partos asi que por ahora solo pondr√© 1 parto
 
             foreach (Person person in GenerateChilds)
             {
-                // Generar con Faker. //Lo unico que hay que generar con FAKER aqui creo que serÌa el estado de animo, las deas cosas las heredan del padre o son logica como si esta vivo
+                // Generar con Faker. //Lo unico que hay que generar con FAKER aqui creo que ser√≠a el estado de animo, las deas cosas las heredan del padre o son logica como si esta vivo
                 Person hijo = new Person();
                 genderBaby = (Gender)random.Next(0, 2);
                 var _person = new Faker<Person>();
@@ -197,7 +198,7 @@ namespace GameOfLifeApi
             {
                 if(oldPerson == person.Pareja)
                 {
-                    ListPerson.Remove(oldPerson); //Remover a la mam· ya que no contiene al hijo y agregarla a Lista con el hijo
+                    ListPerson.Remove(oldPerson); //Remover a la mam√° ya que no contiene al hijo y agregarla a Lista con el hijo
 
                     //Agregarle el hijo a la pareja
                     person.Pareja.Hijo.Add(hijo);
@@ -206,7 +207,7 @@ namespace GameOfLifeApi
             }
         }
 
-        public static void GenerateCovid(List<Person> ListPerson, double infections) //Infections es el % de la poblaciÛn que el usuario quiere que se infecte de covid
+        public static void GenerateCovid(List<Person> ListPerson, double infections) //Infections es el % de la poblaci√≥n que el usuario quiere que se infecte de covid
         {
             Random random = new Random();
             int countListPerson = ListPerson.Count;
@@ -235,8 +236,10 @@ namespace GameOfLifeApi
                 }
                 while ((ListPerson[randomPerson].Age <= 40) && (ListPerson[randomPerson].Gender == Gender.Female) && (ListPerson[randomPerson].IsMarried == true));
 
-                ListPerson.Remove(ListPerson[randomPerson]); //MuriÛ
+                ListPerson.Remove(ListPerson[randomPerson]); //Muri√≥
             }
+
+            ValidateIfCoupleDied(ListPerson)
         }
 
         public static void GetAttributes(List<Person> ListPerson)
@@ -270,23 +273,25 @@ namespace GameOfLifeApi
                 }
                 while (ListPerson[i].TotalLife >= 1 || ListPerson[i+1].TotalLife > 1); //Si uno de los dos muere entonces dejan de pelear
 
-                if (ListPerson[i].TotalLife <= 0) ListPerson.Remove(ListPerson[i]); //Si muriÛ lo elimino al jugador 1
+                if (ListPerson[i].TotalLife <= 0) ListPerson.Remove(ListPerson[i]); //Si muri√≥ lo elimino al jugador 1
                 else //Aumento la resistencia y el poder del arma si es que gano la batalla
                 {
                     ListPerson[i].Resistence += 1;
                     ListPerson[i].Weapon += 1;
                 }
 
-                if (ListPerson[i+1].TotalLife <= 0) ListPerson.Remove(ListPerson[i+1]); //Si muriÛ lo elimino al jugador 2
+                if (ListPerson[i+1].TotalLife <= 0) ListPerson.Remove(ListPerson[i+1]); //Si muri√≥ lo elimino al jugador 2
                 else //Aumento la resistencia y el poder del arma si es que gano la batalla
                 {
                     ListPerson[i+1].Resistence += 1;
                     ListPerson[i + 1].Weapon += 1;
                 }
             }
+            ValidateIfCoupleDied(ListPerson);
+
         } 
 
-        public static void AdvanceOfTime(List<Person> ListPerson, int advanceYears) //Hay que pedirle al usuario cuantos aÒos quiere adelantar
+        public static void AdvanceOfTime(List<Person> ListPerson, int advanceYears) //Hay que pedirle al usuario cuantos a√±os quiere adelantar
         {
             foreach (Person person in ListPerson)
             {
@@ -294,9 +299,59 @@ namespace GameOfLifeApi
                 if (person.Age >= 65) ListPerson.Remove(person);
             }
 
+            ValidateIfCoupleDied(ListPerson);
+        }
+        
+        public static void GlobalDestruction(List<Person> ListPerson, int earthquakeMortality, int meteoriteMortality)
+        {
+            Random random = new Random();
+            int countListPerson = ListPerson.Count;
+            
+            for (double i = 0; i < (countListPerson * (earthquakeMortality/100)); i++) //Mate por terremoto
+            {
+                int randomPerson = random.Next(0, countListPerson);
+                ListPerson.Remove(ListPerson[randomPerson]);
+            }
+
+            for (double i = 0; i < (countListPerson * (meteoriteMortality/100)); i++) //Mateo por Meteorito
+            {
+                int randomPerson = random.Next(0, countListPerson);
+                ListPerson.Remove(ListPerson[randomPerson]);
+            }
+
+            foreach(Person person in ListPerson) //Para todas las personas que siguen vivas y que no las mato la catastrofe les aumento la resistencia
+            {
+                person.Resistence += 1;
+            }
+
+            ValidateIfCoupleDied(ListPerson) //Ya que mate a algunas personas voy a cambiar su estado a soltero si es que sus parejas murieron
+        }
+
+        public static void ValidateIfCoupleDied(List<Person> ListPerson)
+        {
+            List<Person> ListWithCouple = new List<Person>(); //Agrego a todas las personas que tienen parejas, pero m√°s adelante compruebo si su pareja sigue viva
+            int countListPerson = ListWithCouple.Count;
+            foreach(Person person in ListPerson)
+            {
+                if(person.Pareja.Count == 1) ListWithCouple.Add(person);
+            }
+
+            for(int i=0; i<countListPerson; i++)
+            {
+                Person personToAnalyzeIfIsCoupleLive = ListWithCouple[i];
+
+                foreach(Person person in ListPerson)
+                {
+                    if(personToAnalyzeIfIsCoupleLive.Pareja == person) break;
+                    else
+                    {
+                        personToAnalyzeIfIsCoupleLive.IsMarried == false;
+                    }
+                }
+
+                if(personToAnalyzeIfIsCoupleLive.IsMarried == false && personToAnalyzeIfIsCoupleLive.Pareja.Count == 1) ListPerson.RemoveAt(personToAnalyzeIfIsCoupleLive.Pareja);
+            }
         }
 
     }
 }
-
-
