@@ -80,11 +80,11 @@ namespace GameOfLifeApi
             }
 
             int counter = 0;
-            foreach(Person woman in WomanSingle)
+            foreach(var woman in WomanSingle.ToList())
             {
                 do
                 {
-                    foreach (Person man in ManSingle)
+                    foreach (var man in ManSingle.ToList())
                     {
                         counter++;
                         if ((woman.Age + 5) <= man.Age) //Comprueba si el hombre es mayor o igual a la edad de la mujer
@@ -136,6 +136,8 @@ namespace GameOfLifeApi
                 if ((husband.Blood == BloodType.Aplus || husband.Blood == BloodType.Bplus || husband.Blood == BloodType.Oplus || husband.Blood == BloodType.ABplus) && (husband.Pareja.Blood == BloodType.Aplus || husband.Pareja.Blood == BloodType.Bplus || husband.Pareja.Blood == BloodType.Oplus || husband.Pareja.Blood == BloodType.ABplus)) GenerateChildren(ListPerson, GenerateChilds);
                 if ((husband.Blood == BloodType.Aminus || husband.Blood == BloodType.Bminus || husband.Blood == BloodType.Ominus || husband.Blood == BloodType.ABminus) && (husband.Pareja.Blood == BloodType.Aminus || husband.Pareja.Blood == BloodType.Bminus || husband.Pareja.Blood == BloodType.Ominus || husband.Pareja.Blood == BloodType.ABminus)) GenerateChildren(ListPerson, GenerateChilds);
             }
+
+            GenerateChildren(ListPerson, GenerateChilds);
         }
 
         public static void GenerateChildren(List<Person> ListPerson, List<Person> GenerateChilds)
@@ -239,7 +241,7 @@ namespace GameOfLifeApi
                 ListPerson.Remove(ListPerson[randomPerson]); //Murió
             }
 
-            ValidateIfCoupleDied(ListPerson)
+            ValidateIfCoupleDied(ListPerson);
         }
 
         public static void GetAttributes(List<Person> ListPerson)
@@ -249,12 +251,14 @@ namespace GameOfLifeApi
             foreach(Person person in ListPerson)
             {
                 person.Life = random.Next(50, 70);
-                //person.Ataque = random.Next(30, 75);
+                person.Attack = random.Next(30, 75);
                 person.Defense = random.Next(20, 50);
                 person.Weapon = random.Next(5, 10);
                 person.TotalDamage = person.Attack + person.Weapon;
                 person.TotalLife = person.Life + person.Defense;
             }
+
+
         }
 
         public static void FightOfTheStrongest(List<Person> ListPerson)
@@ -324,38 +328,34 @@ namespace GameOfLifeApi
                 person.Resistence += 1;
             }
 
-            ValidateIfCoupleDied(ListPerson) //Ya que mate a algunas personas voy a cambiar su estado a soltero si es que sus parejas murieron
+            ValidateIfCoupleDied(ListPerson); //Ya que mate a algunas personas voy a cambiar su estado a soltero si es que sus parejas murieron
         }
 
         public static void ValidateIfCoupleDied(List<Person> ListPerson)
         {
             List<Person> ListWithCouple = new List<Person>(); //Agrego a todas las personas que tienen parejas, pero más adelante compruebo si su pareja sigue viva
             int countListPerson = ListWithCouple.Count;
-            foreach(Person person in ListPerson)
+            foreach (Person person in ListPerson)
             {
-                if(person.Pareja.Count == 1) ListWithCouple.Add(person);
+                if (person.Pareja.Name is not null) ListWithCouple.Add(person);
             }
 
-            for(int i=0; i<countListPerson; i++)
+            for (int i = 0; i < countListPerson; i++)
             {
                 Person personToAnalyzeIfIsCoupleLive = ListWithCouple[i];
 
-                foreach(Person person in ListPerson)
+                foreach (Person person in ListPerson)
                 {
-                    if(personToAnalyzeIfIsCoupleLive.Pareja == person) break;
+                    if (personToAnalyzeIfIsCoupleLive.Pareja == person) break;
                     else
                     {
-                        personToAnalyzeIfIsCoupleLive.IsMarried == false;
+                        _ = personToAnalyzeIfIsCoupleLive.IsMarried == false;
                     }
                 }
 
-                if(personToAnalyzeIfIsCoupleLive.IsMarried == false && personToAnalyzeIfIsCoupleLive.Pareja.Count == 1) ListPerson.RemoveAt(personToAnalyzeIfIsCoupleLive.Pareja);
+                if (personToAnalyzeIfIsCoupleLive.IsMarried == false && personToAnalyzeIfIsCoupleLive.Pareja.Name is not null) personToAnalyzeIfIsCoupleLive.Pareja = null;
             }
         }
 
-        public static void GlobalDestruction(List<Person> ListPerson, int meteorDeath, int earthquakeDeath)
-        {
-            
-        }
-    } 
+    }
 }
